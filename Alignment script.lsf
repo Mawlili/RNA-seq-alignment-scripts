@@ -1,0 +1,39 @@
+#BSUB -J Star_alignment
+#BSUB -W 24:00
+#BSUB -o /rsrch5/home/epi/bhattacharya_lab/users/whwu1
+#BSUB -e /rsrch5/home/epi/bhattacharya_lab/users/whwu1
+#BSUB -q medium 
+#BSUB -n 4
+#BSUB -M 25
+#BSUB -R rusage[mem=100]
+#BSUB -N
+#BSUB -B
+#BSUB -u whwu1@mdanderson.org
+### LOAD UP MODULES
+module add star
+eval "$(/risapps/rhel8/miniconda3/py39_4.12.0/bin/conda shell.bash hook)"
+            conda activate star-2.7.10b
+### DEFINE GLOBAL VARIABLES
+fasta_file="/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/genome/Homo_sapiens.GRCh38.dna.primary_assembly.fa"
+gtf_file="/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/txome/gencode_v45/gencode.v45.annotation.nochr.gtf"
+star_database_v45_grch38="/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/star_database_v45_grch38"
+out_folder_alignment="/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/bam"
+file1="/rsrch5/home/epi/bhattacharya_lab/users/whwu1/out_J1001_1_trimmed.fastq"
+file2="/rsrch5/home/epi/bhattacharya_lab/users/whwu1/out_J1001_2_trimmed.fastq"
+file1_trimmed="/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp/file1_trimmed.fastq.gz"
+file2_trimmed="/rsrch5/home/epi/bhattacharya_lab/users/whwu1//temp/file2_trimmed.fastq.gz"
+out_folder_fastqc=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/fastq
+out_folder_trim=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp
+
+### RUN LINES OF CODEtest
+fastqc "$file1" "$file2" -o "$out_folder_fastqc" -d "$out_folder_fastqc"
+
+trimmomatic PE  "$file1" "$file2" "$out_folder_trim"/file1_trimmed.fastq "$out_folder_trim"/file2_trimmed.fastq LEADING:20 TRAILING:20 MINLEN:112
+gzip "$out_folder_trim"/*.fastq
+if [ -d "$star_database_v45_grch38" ]; then
+    echo "Folder exists"
+else
+STAR --runMode genomeGenerate --genomeFastaFiles "$fasta_file" --sjdbGTFfile "$gtf_file" --genomeDir "$star_database_v45_grch38" --genomeSAindexNbases 12
+fi
+STAR --genomeDir "$star_database_v45_grch38" --readFilesIn "$file1_trimmed" "$file2_trimmed"  --outFileNamePrefix "$out_folder_alignment"/JXXX.sortedbyCoord_ --outSAMtype BAM SortedByCoordinate --outFilterMismatchNmax 5 --outFilterMultimapNmax 1 --runThreadN 4
+### CLEANUP
