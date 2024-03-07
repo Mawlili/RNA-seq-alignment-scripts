@@ -13,7 +13,7 @@
 module add star
 eval "$(/risapps/rhel8/miniconda3/py39_4.12.0/bin/conda shell.bash hook)"
             conda activate star-2.7.10b
-### DEFINE GLOBAL VARIABLES
+### DEFINE GLOBAL VARIABLEStest
 fasta_file="/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/genome/Homo_sapiens.GRCh38.dna.primary_assembly.fa"
 gtf_file="/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/txome/gencode_v45/gencode.v45.annotation.nochr.gtf"
 star_database_v45_grch38="/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/star_database_v45_grch38"
