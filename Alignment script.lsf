@@ -25,7 +25,7 @@ file2_trimmed="/rsrch5/home/epi/bhattacharya_lab/users/whwu1//temp/file2_trimmed
 out_folder_fastqc=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/fastq
 out_folder_trim=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp
 
-### RUN LINES OF CODEtest
+### RUN LINES OF CODE
 fastqc "$file1" "$file2" -o "$out_folder_fastqc" -d "$out_folder_fastqc"
 
 trimmomatic PE  "$file1" "$file2" "$out_folder_trim"/file1_trimmed.fastq "$out_folder_trim"/file2_trimmed.fastq LEADING:20 TRAILING:20 MINLEN:112
@@ -35,5 +35,5 @@ if [ -d "$star_database_v45_grch38" ]; then
 else
 STAR --runMode genomeGenerate --genomeFastaFiles "$fasta_file" --sjdbGTFfile "$gtf_file" --genomeDir "$star_database_v45_grch38" --genomeSAindexNbases 12
 fi
-STAR --genomeDir "$star_database_v45_grch38" --readFilesIn "$file1_trimmed" "$file2_trimmed"  --outFileNamePrefix "$out_folder_alignment"/JXXX.sortedbyCoord_ --outSAMtype BAM SortedByCoordinate --outFilterMismatchNmax 5 --outFilterMultimapNmax 1 --runThreadN 4
+STAR --genomeDir "$star_database_v45_grch38" --readFilesIn "$file1_trimmed" "$file2_trimmed"  --outFileNamePrefix "$out_folder_alignment"/J1001.sortedbyCoord_ --outSAMtype BAM SortedByCoordinate --outFilterMismatchNmax 5 --outFilterMultimapNmax 1 --runThreadN 4
 ### CLEANUP
