@@ -1,6 +1,6 @@
 #BSUB -J Star_alignment
 #BSUB -W 24:00
-#BSUB -o /rsrch5/home/epi/bhattacharya_lab/users/whwu1
+#BSUB -o /rsrch5/home/epi/bhattacharya_lab/users/whwu1/log
 #BSUB -e /rsrch5/home/epi/bhattacharya_lab/users/whwu1
 #BSUB -q medium 
 #BSUB -n 4
@@ -24,8 +24,8 @@ fasta_file="/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/genome/Homo
 gtf_file="/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/txome/gencode_v45/gencode.v45.annotation.nochr.gtf"
 star_database_v45_grch38="/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/star_database_v45_grch38"
 out_folder_alignment="/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/bam"
-file1="/rsrch5/home/epi/bhattacharya_lab/users/whwu1/out_J1001_1_trimmed.fastq"
-file2="/rsrch5/home/epi/bhattacharya_lab/users/whwu1/out_J1001_2_trimmed.fastq"
+file1="/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/rnaseq/fastq/J1001_1.fq.gz"
+file2="/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/rnaseq/fastq/J1001_2.fq.gz"
 file1_trimmed="/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp/file1_trimmed.fastq.gz"
 file2_trimmed="/rsrch5/home/epi/bhattacharya_lab/users/whwu1//temp/file2_trimmed.fastq.gz"
 out_folder_fastqc=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/fastq
