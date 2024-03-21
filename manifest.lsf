@@ -1,4 +1,4 @@
-#BSUB -J manifest[1-200]
+#BSUB -J manifest[1-3]
 #BSUB -W 24:00
 #BSUB -o /rsrch5/home/epi/bhattacharya_lab/users/whwu1/log
 #BSUB -e /rsrch5/home/epi/bhattacharya_lab/users/whwu1/log
