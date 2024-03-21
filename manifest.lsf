@@ -27,10 +27,10 @@ star_database_v45_grch38=/rsrch5/home/epi/bhattacharya_lab/data/GenomicReference
 ### Manifest input
 manifest_file=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/manifest.tsv
 read_in_line=LSB_JOB_INDEX
-sample_id_1=$(awk -F '\t' 'NR==$read_in_line {print $1}' $manifest_file)
-sample_id_2=$(awk -F '\t' 'NR==$read_in_line {print $3}' $manifest_file)
-file1=$(awk -F '\t' 'NR==$read_in_line {print $2}' $manifest_file)
-file2=$(awk -F '\t' 'NR==$read_in_line {print $4}' $manifest_file)
+sample_id_1=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $1}' $manifest_file)
+sample_id_2=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $3}' $manifest_file)
+file1=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $2}' $manifest_file)
+file2=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $4}' $manifest_file)
 file1_trimmed=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp/"$sample_id_1"_trimmed.fastq.gz
 file2_trimmed=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp/"$sample_id_2"_trimmed.fastq.gz
 ### Directories
