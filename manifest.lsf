@@ -43,8 +43,9 @@ out_folder_trim=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp
 echo "file1: '$file1'"
 echo "file2: '$file2'"
 echo "file1_t: '$file1_trimmed'"
-echo "file2_t: 'file2_trimmed'"
-echo "read_in_line: 'read_in_line'"
+echo "file2_t: '$file2_trimmed'"
+echo "sample_id: '$sample_id_1'"
+echo "read_in_line: '$read_in_line'"
 
 fastqc "$file1" "$file2" -o "$out_folder_fastqc" -d "$out_folder_fastqc"
 ### trimmomatic PE -threads 4 "$file1" "$file2" "$out_folder_trim"/"$sample_id_1"_trimmed.fastq "$out_folder_trim"/"$sample_id_1"_unpaired.fastq "$out_folder_trim"/"$sample_id_2"_trimmed.fastq "$out_folder_trim"/"$sample_id_2"_unpaired.fastq LEADING:20 TRAILING:20 MINLEN:112
