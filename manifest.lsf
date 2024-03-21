@@ -26,7 +26,7 @@ gtf_file=/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/txome/gencode_
 star_database_v45_grch38=/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/star_database_v45_grch38
 ### Manifest input
 manifest_file=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/manifest.tsv
-read_in_line=LSB_JOB_INDEX
+read_in_line=LSB_JOBINDEX
 sample_id_1=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $1}' $manifest_file)
 sample_id_2=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $3}' $manifest_file)
 file1=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $2}' $manifest_file)
