@@ -30,7 +30,9 @@ read_in_line=LSB_JOB_INDEX
 sample_id_1=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $1}' $manifest_file)
 sample_id_2=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $3}' $manifest_file)
 file1=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $2}' $manifest_file)
+file1="${file1//$'\r'/}"
 file2=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $4}' $manifest_file)
+file2="${file2//$'\r'/}"
 file1_trimmed=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp/"$sample_id_1"_trimmed.fastq.gz
 file2_trimmed=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp/"$sample_id_2"_trimmed.fastq.gz
 ### Directories
