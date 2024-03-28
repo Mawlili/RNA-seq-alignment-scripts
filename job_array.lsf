@@ -7,4 +7,4 @@
 #BSUB -o /rsrch5/home/epi/bhattacharya_lab/users/whwu1/log
 #BSUB -e /rsrch5/home/epi/bhattacharya_lab/users/whwu1/log
 
-source ./manifest.lsf $LSB_JOBINDEX
+source /rsrch5/home/epi/bhattacharya_lab/users/whwu1/scripts/scripts/manifest.lsf $LSB_JOBINDEX
