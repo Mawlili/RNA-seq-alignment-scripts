@@ -45,7 +45,7 @@ out_folder_trim=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp
 ### RUN LINES OF CODE
 ### fastqc "$file1" "$file2" -o "$out_folder_fastqc" -d "$out_folder_fastqc"
  trimmomatic PE -threads 4 "$file1" "$file2" "$out_folder_trim"/"$sample_id_1"_trimmed.fastq "$out_folder_trim"/"$sample_id_1"_unpaired.fastq "$out_folder_trim"/"$sample_id_2"_trimmed.fastq "$out_folder_trim"/"$sample_id_2"_unpaired.fastq LEADING:20 TRAILING:20 MINLEN:112
-### gzip "$out_folder_trim"/*.fastq
+ gzip "$out_folder_trim"/*.fastq
 ### if [ -d "$star_database_v45_grch38" ]; then
 ###     echo "Folder exists"
 ### else
