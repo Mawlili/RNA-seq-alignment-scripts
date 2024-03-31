@@ -1,14 +1,14 @@
-#BSUB -J manifest[1]
+#BSUB -J manifest
 #BSUB -W 24:00
 #BSUB -o /rsrch5/home/epi/bhattacharya_lab/users/whwu1/log
 #BSUB -e /rsrch5/home/epi/bhattacharya_lab/users/whwu1/log
 #BSUB -q medium 
 #BSUB -n 4
-#BSUB -M 20
-#BSUB -R rusage[mem=80]
+#BSUB -M 25
+#BSUB -R rusage[mem=100]
 #BSUB -N
 #BSUB -B
-#BSUB -u whwu1@mdanderson.org
+#BSUB -u 
 ### LOAD UP MODULES
 module add star
 eval "$(/risapps/rhel8/miniconda3/py39_4.12.0/bin/conda shell.bash hook)"
@@ -24,6 +24,9 @@ conda activate --stack star-2.7.10b
 fasta_file=/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/genome/Homo_sapiens.GRCh38.dna.primary_assembly.fa
 gtf_file=/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/txome/gencode_v45/gencode.v45.annotation.nochr.gtf
 star_database_v45_grch38=/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/star_database_v45_grch38
+salmon=/rsrch5/home/epi/bhattacharya_lab/software/salmon-latest_linux_x86_64/bin/salmon
+salmon_databse_v38=/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/txome/gencode.v38.salmon_index
+salmon_output=/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/salmon_output
 ### Manifest input
 manifest_file=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/manifest.tsv
 read_in_line=$LSB_JOBINDEX
@@ -40,7 +43,7 @@ out_folder_alignment=/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/bam
 out_folder_fastqc=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/fastq
 out_folder_trim=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp
 ### RUN LINES OF CODE
-fastqc "$file1" "$file2" -o "$out_folder_fastqc" -d "$out_folder_fastqc"
+### fastqc "$file1" "$file2" -o "$out_folder_fastqc" -d "$out_folder_fastqc"
 ### trimmomatic PE -threads 4 "$file1" "$file2" "$out_folder_trim"/"$sample_id_1"_trimmed.fastq "$out_folder_trim"/"$sample_id_1"_unpaired.fastq "$out_folder_trim"/"$sample_id_2"_trimmed.fastq "$out_folder_trim"/"$sample_id_2"_unpaired.fastq LEADING:20 TRAILING:20 MINLEN:112
 ### gzip "$out_folder_trim"/*.fastq
 ### if [ -d "$star_database_v45_grch38" ]; then
@@ -49,5 +52,10 @@ fastqc "$file1" "$file2" -o "$out_folder_fastqc" -d "$out_folder_fastqc"
 ### STAR --runMode genomeGenerate --genomeFastaFiles "$fasta_file" --sjdbGTFfile "$gtf_file" --genomeDir "$star_database_v45_grch38" --genomeSAindexNbases 12
 ### fi
 ### STAR --genomeDir "$star_database_v45_grch38" --readFilesIn "$file1_trimmed" "$file2_trimmed"  --outFileNamePrefix "$out_folder_alignment"/J1001.sortedbyCoord_ --outSAMtype BAM SortedByCoordinate --outFilterMismatchNmax 5 --outFilterMultimapNmax 1 --runThreadN 4 --readFilesCommand zcat 
+### if [ -d "$salmon_databse_v38" ]; then
+###     echo "Folder exists"
+### else
+### echo "Missing reference"
+$salmon quant -i $salmon_databse_v38 -l A -1 $file1_trimmed -2 $file2_trimmed -o $salmon_output --validateMappings -p 4 --numBootstraps 100 --seqBias --gcBias
 ### CLEANUP 
 ### rm "$out_folder_trim"/*
