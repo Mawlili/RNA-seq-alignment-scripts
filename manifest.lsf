@@ -45,8 +45,8 @@ out_folder_trim=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp
 ### RUN LINES OF CODE
 mkdir /rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/salmon_output/$sample_id_1
 ### fastqc "$file1" "$file2" -o "$out_folder_fastqc" -d "$out_folder_fastqc"
- trimmomatic PE -threads 4 "$file1" "$file2" "$out_folder_trim"/"$sample_id_1"_trimmed.fastq "$out_folder_trim"/"$sample_id_1"_unpaired.fastq "$out_folder_trim"/"$sample_id_2"_trimmed.fastq "$out_folder_trim"/"$sample_id_2"_unpaired.fastq LEADING:20 TRAILING:20 MINLEN:112
- gzip "$out_folder_trim"/*.fastq
+### trimmomatic PE -threads 4 "$file1" "$file2" "$out_folder_trim"/"$sample_id_1"_trimmed.fastq "$out_folder_trim"/"$sample_id_1"_unpaired.fastq "$out_folder_trim"/"$sample_id_2"_trimmed.fastq "$out_folder_trim"/"$sample_id_2"_unpaired.fastq LEADING:20 TRAILING:20 MINLEN:112
+### gzip "$out_folder_trim"/*.fastq
 ### if [ -d "$star_database_v45_grch38" ]; then
 ###     echo "Folder exists"
 ### else
@@ -57,6 +57,6 @@ mkdir /rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/salmon_output/$sample_
 ###     echo "Folder exists"
 ### else
 ### echo "Missing reference"
-$salmon quant -i $salmon_databse_v38 -l A -1 $file1_trimmed -2 $file2_trimmed -o $salmon_output --validateMappings -p 4 --numBootstraps 100 --seqBias --gcBias
+### $salmon quant -i $salmon_databse_v38 -l A -1 $file1_trimmed -2 $file2_trimmed -o $salmon_output --validateMappings -p 4 --numBootstraps 100 --seqBias --gcBias
 ### CLEANUP 
 ### rm "$out_folder_trim"/*
