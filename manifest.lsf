@@ -31,6 +31,7 @@ salmon_output=/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/salmon_output/
 manifest_file=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/manifest.tsv
 read_in_line=$LSB_JOBINDEX
 sample_id=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $5}' $manifest_file)
+sample_id="${sample_id//$'\r'/}"
 file1=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $2}' $manifest_file)
 file1="${file1//$'\r'/}"
 file2=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $4}' $manifest_file)
