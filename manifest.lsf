@@ -26,26 +26,25 @@ gtf_file=/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/txome/gencode_
 star_database_v45_grch38=/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/star_database_v45_grch38
 salmon=/rsrch5/home/epi/bhattacharya_lab/software/salmon-latest_linux_x86_64/bin/salmon
 salmon_databse_v38=/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/txome/gencode.v38.salmon_index
-salmon_output=/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/salmon_output/$sample_id_1
+salmon_output=/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/salmon_output/$sample_id
 ### Manifest input
 manifest_file=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/manifest.tsv
 read_in_line=$LSB_JOBINDEX
-sample_id_1=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $1}' $manifest_file)
-sample_id_2=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $3}' $manifest_file)
+sample_id=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $5}' $manifest_file)
 file1=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $2}' $manifest_file)
 file1="${file1//$'\r'/}"
 file2=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $4}' $manifest_file)
 file2="${file2//$'\r'/}"
-file1_trimmed=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp/"$sample_id_1"_trimmed.fastq.gz
-file2_trimmed=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp/"$sample_id_2"_trimmed.fastq.gz
+file1_trimmed=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp/"$sample_id"_1_trimmed.fastq.gz
+file2_trimmed=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp/"$sample_id"_2_trimmed.fastq.gz
 ### Directories
 out_folder_alignment=/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/bam
 out_folder_fastqc=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/fastq
 out_folder_trim=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp
 ### RUN LINES OF CODE
-mkdir /rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/salmon_output/$sample_id_1
+mkdir /rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/salmon_output/$sample_id
 ### fastqc "$file1" "$file2" -o "$out_folder_fastqc" -d "$out_folder_fastqc"
- trimmomatic PE -threads 4 "$file1" "$file2" "$out_folder_trim"/"$sample_id_1"_trimmed.fastq "$out_folder_trim"/"$sample_id_1"_unpaired.fastq "$out_folder_trim"/"$sample_id_2"_trimmed.fastq "$out_folder_trim"/"$sample_id_2"_unpaired.fastq LEADING:20 TRAILING:20 MINLEN:112
+ trimmomatic PE -threads 4 "$file1" "$file2" "$out_folder_trim"/"$sample_id"_1_trimmed.fastq "$out_folder_trim"/"$sample_id"_2_unpaired.fastq "$out_folder_trim"/"$sample_id"_2_trimmed.fastq "$out_folder_trim"/"$sample_id"_2_unpaired.fastq LEADING:20 TRAILING:20 MINLEN:112
  gzip "$out_folder_trim"/*.fastq
 ### if [ -d "$star_database_v45_grch38" ]; then
 ###     echo "Folder exists"
