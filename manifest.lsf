@@ -26,12 +26,11 @@ gtf_file=/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/txome/gencode_
 star_database_v45_grch38=/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/star_database_v45_grch38
 salmon=/rsrch5/home/epi/bhattacharya_lab/software/salmon-latest_linux_x86_64/bin/salmon
 salmon_databse_v38=/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/txome/gencode.v38.salmon_index
-salmon_output=/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/salmon_output/$sample_id
-### Manifest input
 manifest_file=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/manifest.tsv
 read_in_line=$LSB_JOBINDEX
 sample_id=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $5}' $manifest_file)
 sample_id="${sample_id//$'\r'/}"
+salmon_output=/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/salmon_output/$sample_id
 file1=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $2}' $manifest_file)
 file1="${file1//$'\r'/}"
 file2=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $4}' $manifest_file)
@@ -59,4 +58,3 @@ mkdir /rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/salmon_output/$sample_
 ### echo "Missing reference"
  $salmon quant -i $salmon_databse_v38 -l A -1 $file1_trimmed -2 $file2_trimmed -o $salmon_output --validateMappings -p 4 --numBootstraps 100 --seqBias --gcBias
 ### CLEANUP 
- rm "$out_folder_trim"/*
