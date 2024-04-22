@@ -60,7 +60,7 @@ mkdir /rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/salmon_output/$sample_
 ### else
 ### STAR --runMode genomeGenerate --genomeFastaFiles "$fasta_file" --sjdbGTFfile "$gtf_file" --genomeDir "$star_database_v45_grch38" --genomeSAindexNbases 12
 ### fi
-### STAR --genomeDir "$star_database_v45_grch38" --readFilesIn "$file1_trimmed" "$file2_trimmed"  --outFileNamePrefix "$out_folder_alignment"/$sample_id.sortedbyCoord_ --outSAMtype BAM SortedByCoordinate --outFilterMismatchNmax 5 --outFilterMultimapNmax 1 --runThreadN 4 --readFilesCommand zcat 
+ STAR --genomeDir "$star_database_v45_grch38" --readFilesIn "$file1_trimmed" "$file2_trimmed"  --outFileNamePrefix "$out_folder_alignment"/$sample_id.sortedbyCoord_ --outSAMtype BAM SortedByCoordinate --outFilterMismatchNmax 5 --outFilterMultimapNmax 1 --runThreadN 4 --readFilesCommand zcat 
 ### if [ -d "$salmon_databse_v38" ]; then
 ###     echo "Folder exists"
 ### else
