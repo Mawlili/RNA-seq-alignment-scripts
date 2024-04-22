@@ -16,9 +16,12 @@ module add fastqc
 eval "$(/risapps/rhel8/miniconda3/py39_4.12.0/bin/conda shell.bash hook)"
 module add trimmomatic
 eval "$(/risapps/rhel8/miniconda3/py39_4.12.0/bin/conda shell.bash hook)"
+module load picard
+eval "$(/risapps/rhel8/miniconda3/py39_4.12.0/bin/conda shell.bash hook)"
 conda activate --stack fastqc-0.11.9
 conda activate --stack trimmomatic-0.39
 conda activate --stack star-2.7.10b
+conda activate --stack picard-2.27.4
 ### DEFINE GLOBAL VARIABLES
 ### Database
 fasta_file=/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/genome/Homo_sapiens.GRCh38.dna.primary_assembly.fa
@@ -37,6 +40,9 @@ file2=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $4}' $manifest_file
 file2="${file2//$'\r'/}"
 file1_trimmed=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp/"$sample_id"_1_trimmed.fastq.gz
 file2_trimmed=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp/"$sample_id"_2_trimmed.fastq.gz
+this_bam=/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/bam/$sample_id.sortedbyCoord.out.bam
+picard_out_folder='/rsrch5/home/epi/bhattacharya_lab/data/TCGA/BRCA/picard'
+
 ### Directories
 out_folder_alignment=/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/bam
 out_folder_fastqc=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/fastq
@@ -44,17 +50,32 @@ out_folder_trim=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp
 ### RUN LINES OF CODE
 mkdir /rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/salmon_output/$sample_id
 ### fastqc "$file1" "$file2" -o "$out_folder_fastqc" -d "$out_folder_fastqc"
- trimmomatic PE -threads 4 "$file1" "$file2" "$out_folder_trim"/"$sample_id"_1_trimmed.fastq "$out_folder_trim"/"$sample_id"_2_unpaired.fastq "$out_folder_trim"/"$sample_id"_2_trimmed.fastq "$out_folder_trim"/"$sample_id"_2_unpaired.fastq LEADING:20 TRAILING:20 MINLEN:112
- gzip "$out_folder_trim"/*.fastq
+### trimmomatic PE -threads 4 "$file1" "$file2" "$out_folder_trim"/"$sample_id"_1_trimmed.fastq "$out_folder_trim"/"$sample_id"_2_unpaired.fastq "$out_folder_trim"/"$sample_id"_2_trimmed.fastq "$out_folder_trim"/"$sample_id"_2_unpaired.fastq LEADING:20 TRAILING:20 MINLEN:112
+### gzip "$out_folder_trim"/*.fastq
 ### if [ -d "$star_database_v45_grch38" ]; then
 ###     echo "Folder exists"
 ### else
 ### STAR --runMode genomeGenerate --genomeFastaFiles "$fasta_file" --sjdbGTFfile "$gtf_file" --genomeDir "$star_database_v45_grch38" --genomeSAindexNbases 12
 ### fi
-### STAR --genomeDir "$star_database_v45_grch38" --readFilesIn "$file1_trimmed" "$file2_trimmed"  --outFileNamePrefix "$out_folder_alignment"/J1001.sortedbyCoord_ --outSAMtype BAM SortedByCoordinate --outFilterMismatchNmax 5 --outFilterMultimapNmax 1 --runThreadN 4 --readFilesCommand zcat 
+### STAR --genomeDir "$star_database_v45_grch38" --readFilesIn "$file1_trimmed" "$file2_trimmed"  --outFileNamePrefix "$out_folder_alignment"/$sample_id.sortedbyCoord_ --outSAMtype BAM SortedByCoordinate --outFilterMismatchNmax 5 --outFilterMultimapNmax 1 --runThreadN 4 --readFilesCommand zcat 
 ### if [ -d "$salmon_databse_v38" ]; then
 ###     echo "Folder exists"
 ### else
 ### echo "Missing reference"
- $salmon quant -i $salmon_databse_v38 -l A -1 $file1_trimmed -2 $file2_trimmed -o $salmon_output --validateMappings -p 4 --numBootstraps 100 --seqBias --gcBias
+### $salmon quant -i $salmon_databse_v38 -l A -1 $file1_trimmed -2 $file2_trimmed -o $salmon_output --validateMappings -p 4 --numBootstraps 100 --seqBias --gcBias
+#picards
+samtools sort $this_bam -o $out_folder_trim/$sample_id.sorted.bam -@ 7
+mkdir -p $picard_out_folder/$sample_id
+picard CollectAlignmentSummaryMetrics -I $out_folder_trim/$sample_id.sorted.bam -O $picard_out_folder/$sample_id/$sample_id.alignmentmetrics.txt
+#picard CollectRnaSeqMetrics -I $SCRATCH/temp/$pt_two/$B.sorted.bam 
+#-O $out_folder/$pt_two/$B.rnaseqmetrics.txt \
+#--REF_FLAT $refflat \
+#--STRAND_SPECIFICITY FIRST_READ_TRANSCRIPTION_STRAND \
+#--RIBOSOMAL_INTERVALS $ribo
+#picard CollectGcBiasMetrics -I $SCRATCH/temp/$pt_two/$B.sorted.bam \
+#-O $out_folder/$pt_two/$B.gcbiasmetrics.txt \
+#-S $out_folder/$pt_two/$B.summary.gcbiasmetrics.txt \
+#-CHART $out_folder/$pt_two/$B.summary.gcbiasmetrics.chart.pdf
+picard MarkDuplicates -I $out_folder_trim/$sample_id.sorted.bam -O /dev/null -M $picard_out_folder/$sample_id/$sample_id.markduplicates.txt
+picard CollectInsertSizeMetrics -I $out_folder_trim/$sample_id.sorted.bam -O $picard_out_folder/$sample_id/$sample_id.insertsizes.txt --Histogram_FILE $picard_out_folder/$sample_id/$sample_id.insertsize_hist.pdf -M 0.5
 ### CLEANUP 
