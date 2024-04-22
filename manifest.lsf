@@ -43,7 +43,7 @@ file2=$(awk -v line="$read_in_line" -F '\t' 'NR==line {print $4}' $manifest_file
 file2="${file2//$'\r'/}"
 file1_trimmed=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp/"$sample_id"_1_trimmed.fastq.gz
 file2_trimmed=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp/"$sample_id"_2_trimmed.fastq.gz
-this_bam=/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/bam/$sample_id.sortedbyCoord.out.bam
+this_bam=/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/bam/$sample_id.sortedbyCoord_Aligned.sortedByCoord.out.bam
 picard_out_folder='/rsrch5/home/epi/bhattacharya_lab/data/TCGA/BRCA/picard'
 
 ### Directories
