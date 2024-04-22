@@ -18,6 +18,9 @@ module add trimmomatic
 eval "$(/risapps/rhel8/miniconda3/py39_4.12.0/bin/conda shell.bash hook)"
 module load picard
 eval "$(/risapps/rhel8/miniconda3/py39_4.12.0/bin/conda shell.bash hook)"
+module load samtools
+eval "$(/risapps/rhel8/miniconda3/py39_4.12.0/bin/conda shell.bash hook)"
+conda activate --stack samtools-1.16.1
 conda activate --stack fastqc-0.11.9
 conda activate --stack trimmomatic-0.39
 conda activate --stack star-2.7.10b
