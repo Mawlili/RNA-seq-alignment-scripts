@@ -45,6 +45,9 @@ file1_trimmed=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp/"$sample_id"_1_
 file2_trimmed=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp/"$sample_id"_2_trimmed.fastq.gz
 this_bam=/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/bam/$sample_id.sortedbyCoord_Aligned.sortedByCoord.out.bam
 picard_out_folder='/rsrch5/home/epi/bhattacharya_lab/data/TCGA/BRCA/picard'
+refflat='/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/txome/gencode_v45/gencode.v45.annotation.refflat'
+collapsegtf='/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/txome/gencode_v45/genode.v45.genes.gtf'
+ribo='/rsrch5/home/epi/bhattacharya_lab/data/GenomicReferences/txome/gencode_v45/gencode.v45.primary_assembly.ribosomal.interval_list'
 
 ### Directories
 out_folder_alignment=/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/bam
@@ -70,15 +73,8 @@ mkdir /rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/salmon_output/$sample_
 samtools sort $this_bam -o $out_folder_trim/$sample_id.sorted.bam -@ 7
 mkdir -p $picard_out_folder/$sample_id
 picard CollectAlignmentSummaryMetrics -I $out_folder_trim/$sample_id.sorted.bam -O $picard_out_folder/$sample_id/$sample_id.alignmentmetrics.txt
-#picard CollectRnaSeqMetrics -I $SCRATCH/temp/$pt_two/$B.sorted.bam 
-#-O $out_folder/$pt_two/$B.rnaseqmetrics.txt \
-#--REF_FLAT $refflat \
-#--STRAND_SPECIFICITY FIRST_READ_TRANSCRIPTION_STRAND \
-#--RIBOSOMAL_INTERVALS $ribo
-#picard CollectGcBiasMetrics -I $SCRATCH/temp/$pt_two/$B.sorted.bam \
-#-O $out_folder/$pt_two/$B.gcbiasmetrics.txt \
-#-S $out_folder/$pt_two/$B.summary.gcbiasmetrics.txt \
-#-CHART $out_folder/$pt_two/$B.summary.gcbiasmetrics.chart.pdf
+picard CollectRnaSeqMetrics -I $out_folder_trim/$sample_id.sorted.bam -O $picard_out_folder/$sample_id/$sample_id.rnaseqmetrics.txt --REF_FLAT $refflat --STRAND_SPECIFICITY FIRST_READ_TRANSCRIPTION_STRAND --RIBOSOMAL_INTERVALS $ribo
+picard CollectGcBiasMetrics -I $$out_folder_trim/$sample_id.sorted.bam -O $picard_out_folder/$sample_id/$sample_id.gcbiasmetrics.txt -S $picard_out_folder/$sample_id/$sample_id.summary.gcbiasmetrics.txt -CHART $picard_out_folder/$sample_id/$sample_id.summary.gcbiasmetrics.chart.pdf
 picard MarkDuplicates -I $out_folder_trim/$sample_id.sorted.bam -O /dev/null -M $picard_out_folder/$sample_id/$sample_id.markduplicates.txt
 picard CollectInsertSizeMetrics -I $out_folder_trim/$sample_id.sorted.bam -O $picard_out_folder/$sample_id/$sample_id.insertsizes.txt --Histogram_FILE $picard_out_folder/$sample_id/$sample_id.insertsize_hist.pdf -M 0.5
 ### CLEANUP 
