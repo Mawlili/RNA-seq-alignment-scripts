@@ -4,8 +4,8 @@
 #BSUB -e /rsrch5/home/epi/bhattacharya_lab/users/whwu1/log
 #BSUB -q medium 
 #BSUB -n 4
-#BSUB -M 25
-#BSUB -R rusage[mem=100]
+#BSUB -M 50
+#BSUB -R rusage[mem=200]
 #BSUB -N
 #BSUB -B
 #BSUB -u 
