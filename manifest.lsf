@@ -68,6 +68,7 @@ if [ -d "$salmon_databse_v38" ]; then
     echo "Folder exists"
 else
     echo "Missing reference"
+fi
 $salmon quant -i $salmon_databse_v38 -l A -1 $file1_trimmed -2 $file2_trimmed -o $salmon_output --validateMappings -p 4 --numBootstraps 100 --seqBias --gcBias
 #picards
 samtools sort $this_bam -o $out_folder_trim/$sample_id.sorted.bam -@ 7
