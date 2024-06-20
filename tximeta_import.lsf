@@ -17,4 +17,3 @@ module load R/4.1.0
 
 R --save
 Rscript /rsrch5/home/epi/bhattacharya_lab/users/whwu1/scripts/scripts/tximeta.R
-save.image(file = "salmon_dataset.RData")
