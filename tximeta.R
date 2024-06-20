@@ -1,5 +1,4 @@
 library(tximeta)
-setwd("/rsrch5/home/epi/bhattacharya_lab/users/whwu1/scripts/scripts")
 subdirs <- list.dirs("/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/salmon_output", recursive = FALSE)
 files <- file.path(subdirs, "quant.sf")
 sample_id <- paste0("J", 1001:1200)
