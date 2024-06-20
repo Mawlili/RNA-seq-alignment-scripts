@@ -17,7 +17,7 @@ module load R/4.1.0
 salmon_output=/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/salmon_output
 
 ### RUN LINES OF CODE
-R
+R --save
 library(tximeta)
 subdirs <- list.dirs("$salmon_output", recursive = FALSE)
 quant_files <- file.path(subdirs, "quant.sf")
