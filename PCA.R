@@ -14,8 +14,10 @@ res <- results(dds)
 housekeeping_genes <- rownames(res[which(res$padj > 0.05), ])
 set <- RUVg(expression_data, housekeeping_genes, k=1)
 #log normalization and pca 
-pca_data <- prcomp(t(assay(rlog_data)))
-pca_plot <- ggplot(coldata, aes(x = PC1, y = PC2, color =  condition.mother_highest_education)) +
+pca_data <- prcomp(t(set))
+pca_components <- data.frame(PC1 = pca_data$x[,1], PC2 = pca_data$x[,2])
+pca_plot_data <- cbind(pca_components, coldata)
+pca_plot <- ggplot(pca_plot_data, aes(x = PC1, y = PC2, color =  condition.sex)) +
   geom_point(size = 3) +
   xlab(paste0("PC1: ", round(100 * summary(pca)$importance[2, 1], 1), "% variance")) +
   ylab(paste0("PC2: ", round(100 * summary(pca)$importance[2, 2], 1), "% variance")) +
