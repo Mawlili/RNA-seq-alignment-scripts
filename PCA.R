@@ -4,6 +4,7 @@ library(tximeta)
 library(RUVSeq)
 library(MASS)
 library(ggplot2)
+library(EnhancedVolcano)
 
 #selecting house keeping gene
 gse <- summarizeToGene(se)
@@ -39,7 +40,25 @@ pca_plot <- ggplot(pca_plot_data, aes(x = PC1, y = PC2, color =  condition.sex))
 #DESeqDataSetFromMatrix w1+sex+...
 diff_exp_transcript <- DESeqDataSetFromMatrix(countData = normalized_counts, colData = coldata, design = ~ W_1 + condition.sex + condition.ethnicity + condition.GROUP + condition.GA)
 diff_exp_isoform <- DESeqDataSetFromMatrix(countData = se, colData = coldata, design = ~ W_1 + condition.sex + condition.ethnicity + condition.GROUP + condition.GA)
-
-
+dds_transcript <- DESeq(diff_exp_transcript)
+dds_isoform <- DESeq(diff_exp_isoform)
+res_transcript <- results(dds_transcript)
+res_isoform <- results(dds_isoform)
+EnhancedVolcano(res,
+                lab = rownames(res),              # Labels for points
+                x = 'log2FoldChange',             # x-axis: log2 fold-change
+                y = 'pvalue',                     # y-axis: p-value
+                xlim = c(-5, 5),                  # x-axis limits
+                ylim = c(0, -log10(min(res$pvalue, na.rm = TRUE))),  # y-axis limits
+                pCutoff = 0.05,                   # p-value cutoff for significance
+                FCcutoff = 1.0,                   # Fold-change cutoff for significance
+                pointSize = 2.0,                  # Size of points
+                labSize = 3.0,                    # Size of labels
+                title = 'Volcano plot',           # Title of the plot
+                subtitle = 'Differential expression results',  # Subtitle
+                caption = 'Log2 fold-change vs. p-value',      # Caption
+                legendPosition = 'right',         # Position of legend
+                legendLabSize = 14,               # Size of legend labels
+                legendIconSize = 4.0)    
 #gse and se
 
