@@ -47,8 +47,8 @@ dds_transcript <- DESeq(diff_exp_transcript)
 dds_isoform <- DESeq(diff_exp_isoform)
 res_transcript <- results(dds_transcript)
 res_isoform <- results(dds_isoform)
-EnhancedVolcano(res_transcript,
-                lab = rownames(res_transcript),              # Labels for points
+volcano_plot <- EnhancedVolcano(res_isoform,
+                lab = rownames(res_isoform),              # Labels for points
                 x = 'log2FoldChange',             # x-axis: log2 fold-change
                 y = 'pvalue',                     # y-axis: p-value
                 xlim = c(-5, 5),                  # x-axis limits
