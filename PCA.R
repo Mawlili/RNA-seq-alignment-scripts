@@ -8,6 +8,7 @@ library(EnhancedVolcano)
 
 #selecting house keeping gene
 gse <- summarizeToGene(se)
+counts_se <- round(assay(se))
 counts <- round(assay(gse))
 condition.GA <- coldata$condition.GA
 dds <- DESeqDataSetFromMatrix(countData = counts, colData = coldata, design = ~ condition.GA)
@@ -38,14 +39,16 @@ pca_plot <- ggplot(pca_plot_data, aes(x = PC1, y = PC2, color =  condition.sex))
  ggsave("/rsrch5/home/canbio/whwu1/pca_plot_k1_2.png", plot = pca_plot, width = 10, height = 8, units = "in", dpi = 300) 
 
 #DESeqDataSetFromMatrix w1+sex+...
-diff_exp_transcript <- DESeqDataSetFromMatrix(countData = normalized_counts, colData = coldata, design = ~ W_1 + condition.sex + condition.ethnicity + condition.GROUP + condition.GA)
-diff_exp_isoform <- DESeqDataSetFromMatrix(countData = se, colData = coldata, design = ~ W_1 + condition.sex + condition.ethnicity + condition.GROUP + condition.GA)
+W_1 <- set$W
+coldata_w1 <- cbind(coldata, D = W_1)
+diff_exp_transcript <- DESeqDataSetFromMatrix(countData = normalized_counts, colData = coldata_w1, design = ~ W_1 + condition.sex + condition.mother_ethnicity + condition.GROUP + condition.GA)
+diff_exp_isoform <- DESeqDataSetFromMatrix(countData = counts_se, colData = coldata_w1, design = ~ W_1 + condition.sex + condition.mother_ethnicity + condition.GROUP + condition.GA)
 dds_transcript <- DESeq(diff_exp_transcript)
 dds_isoform <- DESeq(diff_exp_isoform)
 res_transcript <- results(dds_transcript)
 res_isoform <- results(dds_isoform)
-EnhancedVolcano(res,
-                lab = rownames(res),              # Labels for points
+EnhancedVolcano(res_transcript,
+                lab = rownames(res_transcript),              # Labels for points
                 x = 'log2FoldChange',             # x-axis: log2 fold-change
                 y = 'pvalue',                     # y-axis: p-value
                 xlim = c(-5, 5),                  # x-axis limits
