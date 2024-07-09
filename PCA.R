@@ -63,5 +63,8 @@ volcano_plot <- EnhancedVolcano(res_isoform,
                 legendPosition = 'right',         # Position of legend
                 legendLabSize = 14,               # Size of legend labels
                 legendIconSize = 4.0)    
-#gse and se
+
+png("volcano_plot.png")
+print(volcano_plot)
+dev.off()
 
