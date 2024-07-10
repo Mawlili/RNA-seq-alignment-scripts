@@ -16,6 +16,6 @@ cord_pfas_diff <- DESeqDataSetFromMatrix(countData = normalized_counts_filtered_
 mat_pfas_diff <- DESeqDataSetFromMatrix(countData = normalized_counts_filtered_mat, colData = pfas_w1_mat, design = ~ W_1 + condition.sex + condition.mother_ethnicity + condition.GROUP + condition.GA + mat_PFBA)
 dds_cord_pfas <- DESeq(cord_pfas_diff)
 dds_mat_pfas <- DESeq(mat_pfas_diff)
-res_cord_pfas <- results(cord_pfas_diff)
-res_mat_pfas <- results(mat_pfas_diff)
+res_cord_pfas <- results(dds_cord_pfas)
+res_mat_pfas <- results(dds_mat_pfas)
 save(res_cord_pfas, res_mat_pfas, file = "/rsrch5/home/epi/bhattacharya_lab/users/whwu1/out/pfas_results.RData")
