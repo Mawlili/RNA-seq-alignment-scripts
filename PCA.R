@@ -5,6 +5,9 @@ library(RUVSeq)
 library(MASS)
 library(ggplot2)
 library(EnhancedVolcano)
+library(readxl)
+library(dplyr)
+library(writexl)
 
 #selecting house keeping gene
 gse <- summarizeToGene(se)
@@ -68,3 +71,15 @@ png("volcano_plot.png")
 print(volcano_plot)
 dev.off()
 
+#pfas analysis
+pfas <- read_excel("/rsrch5/home/epi/bhattacharya_lab/users/whwu1/pfas.xlsx")
+pfas <- pfas %>%
+  rename(condition.SubjectID = SubjectID)
+pfas_w1 <- inner_join(coldata_w1, pfas, by = "condition.SubjectID")
+#pfba gene family for transcript
+cord_pfas_diff <- DESeqDataSetFromMatrix(countData = normalized_counts, colData = pfas_w1, design = ~ W_1 + condition.sex + condition.mother_ethnicity + condition.GROUP + condition.GA + cord_PFBA)
+mat_pfas_diff <- DESeqDataSetFromMatrix(countData = normalized_counts, colData = pfas_w1, design = ~ W_1 + condition.sex + condition.mother_ethnicity + condition.GROUP + condition.GA + mat_PFBA)
+dds_cord_pfas <- DESeq(cord_pfas_diff)
+dds_mat_pfas <- DESeq(mat_pfas_diff)
+res_cord_pfas <- results(cord_pfas_diff)
+res_mat_pfas <- results(mat_pfas_diff)
