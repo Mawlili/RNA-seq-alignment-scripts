@@ -1,6 +1,4 @@
 library(DESeq2)
-library(tximeta)
-library(RUVSeq)
 library(MASS)
 library(dplyr)
 
