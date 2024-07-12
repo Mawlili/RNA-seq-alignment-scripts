@@ -77,6 +77,8 @@ pfas <- pfas %>%
   rename(condition.SubjectID = SubjectID)
 pfas_w1 <- inner_join(coldata_w1, pfas, by = "condition.SubjectID")
 #pfba gene family for transcript
+
+normalized_counts_f <- dds[rowSums(counts(dds)) > 1, ] 
 cord_pfas_diff <- DESeqDataSetFromMatrix(countData = normalized_counts, colData = pfas_w1, design = ~ W_1 + condition.sex + condition.mother_ethnicity + condition.GROUP + condition.GA + cord_PFBA)
 mat_pfas_diff <- DESeqDataSetFromMatrix(countData = normalized_counts, colData = pfas_w1, design = ~ W_1 + condition.sex + condition.mother_ethnicity + condition.GROUP + condition.GA + mat_PFBA)
 dds_cord_pfas <- DESeq(cord_pfas_diff)
