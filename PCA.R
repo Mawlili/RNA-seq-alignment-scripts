@@ -16,7 +16,7 @@ counts <- round(assay(gse))
 condition.GA <- coldata$condition.GA
 dds <- DESeqDataSetFromMatrix(countData = counts, colData = coldata, design = ~ condition.GA)
 dds <- DESeq(dds)
-res <- counts(dds, normalized = TRUE)
+res <- results(dds)
 sorted_res <- res[order(res$padj, decreasing = TRUE), ]
 housekeeping_genes <- rownames(sorted_res)[1:1000]
 
@@ -37,10 +37,10 @@ pca_plot <- ggplot(pca_plot_data, aes(x = PC1, y = PC2, color =  condition.sex))
   xlab(paste0("PC1: ", round(100 * summary(pca)$importance[2, 1], 1), "% variance")) +
   ylab(paste0("PC2: ", round(100 * summary(pca)$importance[2, 2], 1), "% variance")) +
   ggtitle("PCA Plot") +
- xlim(-20, 25) +
-  ylim(-100, 100)
+ xlim(-110, 75) +
+  ylim(-25, 25)
   theme_minimal()
- ggsave("pca_var.png", plot = pca_plot, width = 10, height = 8, units = "in", dpi = 300) 
+ ggsave("pca_group.png", plot = pca_plot, width = 10, height = 8, units = "in", dpi = 300) 
 
 #DESeqDataSetFromMatrix w1+sex+...
 W_1 <- set$W
