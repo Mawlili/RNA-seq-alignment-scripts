@@ -17,13 +17,11 @@ condition.GA <- coldata$condition.GA
 dds <- DESeqDataSetFromMatrix(countData = counts, colData = coldata, design = ~ condition.GA)
 dds <- DESeq(dds)
 res <- counts(dds, normalized = TRUE)
-gene_variance <- apply(res, 1, var)
-low_variance_genes <- names(sort(gene_variance)[1:100])
-
-#housekeeping_genes <- rownames(res[which(res$padj > 0.05), ])
+sorted_res <- res[order(res$padj, decreasing = TRUE), ]
+housekeeping_genes <- rownames(sorted_res)[1:1000]
 
 #remove variance
-set <- RUVg(counts, low_variance_genes, k=1)
+set <- RUVg(counts, housekeeping_genes, k=1)
 normalized_counts <- set$normalizedCounts
 
 #vst normalization
