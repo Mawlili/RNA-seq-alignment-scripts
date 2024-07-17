@@ -6,15 +6,40 @@ load("/rsrch5/home/epi/bhattacharya_lab/users/whwu1/out/salmon_data_concise.RDat
 #filter out NA 
 pfas_w1_cord <- pfas_w1[!is.na(pfas_w1$cord_PFBA), ]
 pfas_w1_mat <- pfas_w1[!is.na(pfas_w1$mat_PFBA), ]
+pfas_w1_both <- pfas_w1_mat[!is.na(pfas_w1_mat$cord_PFBA), ]
 #filter for common sample id
 pfas_w1_cord_J <- paste0("J", pfas_w1_cord$condition.ID)
 pfas_w1_mat_J <- paste0("J", pfas_w1_mat$condition.ID)
-normalized_counts_filtered_cord <- normalized_counts[, colnames(counts) %in% pfas_w1_cord_J ]
-normalized_counts_filtered_mat <- normalized_counts[, colnames(normalized_counts) %in% pfas_w1_mat_J ]
+pfas_w1_both_J <- paste0("J", pfas_w1_both$condition.ID)
+pfas_w1_both <- pfas_w1_both %>%
+  mutate(r_PFBA = mat_PFBA / cord_PFBA)
+pfas_w1_both <- pfas_w1_both %>%
+  mutate(r_PFOA = mat_PFOA / cord_PFOA)
+pfas_w1_both <- pfas_w1_both %>%
+  mutate(r_PFNA = mat_PFNA / cord_PFNA)
+pfas_w1_both <- pfas_w1_both %>%
+  mutate(r_PFDA = mat_PFDA / cord_PFDA)
+pfas_w1_both <- pfas_w1_both %>%
+  mutate(r_PFUnDA = mat_PFUnDA / cord_PFUnDA)
+pfas_w1_both <- pfas_w1_both %>%
+  mutate(r_PFBS = mat_PFBS / cord_PFBS)
+pfas_w1_both <- pfas_w1_both %>%
+  mutate(r_PFHxS = mat_PFHxS / cord_PFHxS)
 
 counts_filtered_cord <- counts[, colnames(counts) %in% pfas_w1_cord_J ]
 counts_filtered_mat <- counts[, colnames(counts) %in% pfas_w1_mat_J ]
-#construct deseqdataset and perfor deseq analysis
+counts_filtered_both <- counts[, colnames(counts) %in% pfas_w1_both_J ]
+
+#construct deseqdataset and perform deseq analysis
+
+#mat/cord PFBA
+r_pfas_diff1 <- DESeqDataSetFromMatrix(countData = counts_filtered_both, colData = pfas_w1_both, design = ~ W_1 + condition.mother_ethnicity + condition.GROUP + condition.GA + condition.sex + r_PFBA)
+r_pfas_diff1 <- estimateSizeFactors(r_pfas_diff1)
+idxr1 <- rowSums(counts(r_pfas_diff1, normalized=TRUE) >= 5 ) >= 3
+r_pfas_diff1 <- r_pfas_diff1[idxr1,]
+dds_r_pfas1 <- DESeq(r_pfas_diff1)
+res_r_pfas1 <- results(dds_r_pfas1)
+
 
 #cord PFBA
 cord_pfas_diff1 <- DESeqDataSetFromMatrix(countData = counts_filtered_cord, colData = pfas_w1_cord, design = ~ W_1 + condition.mother_ethnicity + condition.GROUP + condition.GA + condition.sex + cord_PFBA)
