@@ -40,6 +40,53 @@ r_pfas_diff1 <- r_pfas_diff1[idxr1,]
 dds_r_pfas1 <- DESeq(r_pfas_diff1)
 res_r_pfas1 <- results(dds_r_pfas1)
 
+#mat/cord PFOA
+r_pfas_diff2 <- DESeqDataSetFromMatrix(countData = counts_filtered_both, colData = pfas_w1_both, design = ~ W_1 + condition.mother_ethnicity + condition.GROUP + condition.GA + condition.sex + r_PFOA)
+r_pfas_diff2 <- estimateSizeFactors(r_pfas_diff2)
+idxr2 <- rowSums(counts(r_pfas_diff2, normalized=TRUE) >= 5 ) >= 3
+r_pfas_diff2 <- r_pfas_diff2[idxr2,]
+dds_r_pfas2 <- DESeq(r_pfas_diff2)
+res_r_pfas2 <- results(dds_r_pfas2)
+
+#mat/cord PFNA
+r_pfas_diff3 <- DESeqDataSetFromMatrix(countData = counts_filtered_both, colData = pfas_w1_both, design = ~ W_1 + condition.mother_ethnicity + condition.GROUP + condition.GA + condition.sex + r_PFNA)
+r_pfas_diff3 <- estimateSizeFactors(r_pfas_diff3)
+idxr3 <- rowSums(counts(r_pfas_diff3, normalized=TRUE) >= 5 ) >= 3
+r_pfas_diff3 <- r_pfas_diff3[idxr3,]
+dds_r_pfas3 <- DESeq(r_pfas_diff3)
+res_r_pfas3 <- results(dds_r_pfas3)
+
+#mat/cord PFDA
+r_pfas_diff4 <- DESeqDataSetFromMatrix(countData = counts_filtered_both, colData = pfas_w1_both, design = ~ W_1 + condition.mother_ethnicity + condition.GROUP + condition.GA + condition.sex + r_PFDA)
+r_pfas_diff4 <- estimateSizeFactors(r_pfas_diff4)
+idxr4 <- rowSums(counts(r_pfas_diff4, normalized=TRUE) >= 5 ) >= 3
+r_pfas_diff4 <- r_pfas_diff4[idxr4,]
+dds_r_pfas4 <- DESeq(r_pfas_diff4)
+res_r_pfas4 <- results(dds_r_pfas4)
+
+#mat/cord PFUnDA
+r_pfas_diff5 <- DESeqDataSetFromMatrix(countData = counts_filtered_both, colData = pfas_w1_both, design = ~ W_1 + condition.mother_ethnicity + condition.GROUP + condition.GA + condition.sex + r_PFUnDA)
+r_pfas_diff5 <- estimateSizeFactors(r_pfas_diff5)
+idxr5 <- rowSums(counts(r_pfas_diff5, normalized=TRUE) >= 5 ) >= 3
+r_pfas_diff5 <- r_pfas_diff5[idxr5,]
+dds_r_pfas5 <- DESeq(r_pfas_diff5)
+res_r_pfas5 <- results(dds_r_pfas5)
+
+#mat/cord PFBS
+r_pfas_diff6 <- DESeqDataSetFromMatrix(countData = counts_filtered_both, colData = pfas_w1_both, design = ~ W_1 + condition.mother_ethnicity + condition.GROUP + condition.GA + condition.sex + r_PFBS)
+r_pfas_diff6 <- estimateSizeFactors(r_pfas_diff6)
+idxr6 <- rowSums(counts(r_pfas_diff6, normalized=TRUE) >= 5 ) >= 3
+r_pfas_diff6 <- r_pfas_diff6[idxr6,]
+dds_r_pfas6 <- DESeq(r_pfas_diff6)
+res_r_pfas6 <- results(dds_r_pfas6)
+
+#mat/cord PFHxS
+r_pfas_diff7 <- DESeqDataSetFromMatrix(countData = counts_filtered_both, colData = pfas_w1_both, design = ~ W_1 + condition.mother_ethnicity + condition.GROUP + condition.GA + condition.sex + r_PFHxS)
+r_pfas_diff7 <- estimateSizeFactors(r_pfas_diff7)
+idxr7 <- rowSums(counts(r_pfas_diff7, normalized=TRUE) >= 5 ) >= 3
+r_pfas_diff7 <- r_pfas_diff7[idxr7,]
+dds_r_pfas7 <- DESeq(r_pfas_diff7)
+res_r_pfas7 <- results(dds_r_pfas7)
 
 #cord PFBA
 cord_pfas_diff1 <- DESeqDataSetFromMatrix(countData = counts_filtered_cord, colData = pfas_w1_cord, design = ~ W_1 + condition.mother_ethnicity + condition.GROUP + condition.GA + condition.sex + cord_PFBA)
@@ -153,4 +200,14 @@ mat_pfas_diff7 <- mat_pfas_diff7[idx_m7,]
 dds_mat_pfas7 <- DESeq(mat_pfas_diff7)
 res_mat_pfas7 <- results(dds_mat_pfas7)
 
-save(res_cord_pfas1, res_cord_pfas2, res_cord_pfas3, res_cord_pfas4, res_cord_pfas5, res_cord_pfas6, res_cord_pfas7, res_mat_pfas1, res_mat_pfas2, res_mat_pfas3, res_mat_pfas4, res_mat_pfas5, res_mat_pfas6, res_mat_pfas7, file = "/rsrch5/home/epi/bhattacharya_lab/users/whwu1/out/pfas_results_716.RData")
+transcript <- DESeqDataSetFromMatrix(countData = counts_filtered_both, colData = pfas_w1_both, design = ~ W_1 + condition.mother_ethnicity + condition.GROUP + condition.sex + condition.GA)
+transcript <- estimateSizeFactors(transcript)
+idx_trans <- rowSums(counts(transcript, normalized=TRUE) >= 5 ) >= 3
+transcript <- transcript[idx_trans,]
+diff_trans <- DESeq(transcript)
+res_trans <- results(diff_trans)
+
+save(res_cord_pfas1, res_cord_pfas2, res_cord_pfas3, res_cord_pfas4, res_cord_pfas5, res_cord_pfas6, res_cord_pfas7, res_mat_pfas1, res_mat_pfas2, res_mat_pfas3, res_mat_pfas4, res_mat_pfas5, res_mat_pfas6, res_mat_pfas7, 
+     res_r_pfas1, res_r_pfas2, res_r_pfas3, res_r_pfas4, res_r_pfas5, res_r_pfas6, res_r_pfas7, res_trans,
+     file = "/rsrch5/home/epi/bhattacharya_lab/users/whwu1/out/pfas_results_717.RData")
+save(res_r_pfas4, file = "/rsrch5/home/epi/bhattacharya_lab/users/whwu1/out/pfas_results_7171.RData )
