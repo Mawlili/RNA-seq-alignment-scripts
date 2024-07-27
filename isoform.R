@@ -4,7 +4,7 @@ library(MASS)
 library(dplyr)
 library(readxl)
 
-load("/rsrch5/home/epi/bhattacharya_lab/users/whwu1/out/salmon_output_concise.RData")
+load("/rsrch5/home/epi/bhattacharya_lab/users/whwu1/out/salmon_data_concise.RData")
 #gse <- summarizeToGene(se)
 counts_se <- round(assay(se))
 #counts <- round(assay(gse))
