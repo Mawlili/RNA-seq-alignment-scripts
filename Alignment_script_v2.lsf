@@ -54,22 +54,22 @@ out_folder_alignment=/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/bam
 out_folder_fastqc=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/fastq
 out_folder_trim=/rsrch5/home/epi/bhattacharya_lab/users/whwu1/temp
 ### RUN LINES OF CODE
-#mkdir /rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/salmon_output/$sample_id
-#fastqc "$file1" "$file2" -o "$out_folder_fastqc" -d "$out_folder_fastqc"
-#trimmomatic PE -threads 4 "$file1" "$file2" "$out_folder_trim"/"$sample_id"_1_trimmed.fastq "$out_folder_trim"/"$sample_id"_2_unpaired.fastq "$out_folder_trim"/"$sample_id"_2_trimmed.fastq "$out_folder_trim"/"$sample_id"_2_unpaired.fastq LEADING:20 TRAILING:20 MINLEN:112
-#gzip "$out_folder_trim"/*.fastq
-#if [ -d "$star_database_v45_grch38" ]; then
-#    echo "Folder exists"
-#else
-#STAR --runMode genomeGenerate --genomeFastaFiles "$fasta_file" --sjdbGTFfile "$gtf_file" --genomeDir "$star_database_v45_grch38" --genomeSAindexNbases 12
-#fi
-#STAR --genomeDir "$star_database_v45_grch38" --readFilesIn "$file1_trimmed" "$file2_trimmed"  --outFileNamePrefix "$out_folder_alignment"/$sample_id.sortedbyCoord_ --outSAMtype BAM SortedByCoordinate --outFilterMismatchNmax 5 --outFilterMultimapNmax 1 --runThreadN 4 --readFilesCommand zcat 
-#if [ -d "$salmon_databse_v38" ]; then
-#    echo "Folder exists"
-#else
-#    echo "Missing reference"
-#fi
-3$salmon quant -i $salmon_databse_v38 -l A -1 $file1_trimmed -2 $file2_trimmed -o $salmon_output --validateMappings -p 4 --numBootstraps 100 --seqBias --gcBias
+mkdir /rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/salmon_output/$sample_id
+fastqc "$file1" "$file2" -o "$out_folder_fastqc" -d "$out_folder_fastqc"
+trimmomatic PE -threads 4 "$file1" "$file2" "$out_folder_trim"/"$sample_id"_1_trimmed.fastq "$out_folder_trim"/"$sample_id"_2_unpaired.fastq "$out_folder_trim"/"$sample_id"_2_trimmed.fastq "$out_folder_trim"/"$sample_id"_2_unpaired.fastq LEADING:20 TRAILING:20 MINLEN:112
+gzip "$out_folder_trim"/*.fastq
+if [ -d "$star_database_v45_grch38" ]; then
+    echo "Folder exists"
+else
+STAR --runMode genomeGenerate --genomeFastaFiles "$fasta_file" --sjdbGTFfile "$gtf_file" --genomeDir "$star_database_v45_grch38" --genomeSAindexNbases 12
+fi
+STAR --genomeDir "$star_database_v45_grch38" --readFilesIn "$file1_trimmed" "$file2_trimmed"  --outFileNamePrefix "$out_folder_alignment"/$sample_id.sortedbyCoord_ --outSAMtype BAM SortedByCoordinate --outFilterMismatchNmax 5 --outFilterMultimapNmax 1 --runThreadN 4 --readFilesCommand zcat 
+if [ -d "$salmon_databse_v38" ]; then
+    echo "Folder exists"
+else
+    echo "Missing reference"
+fi
+$salmon quant -i $salmon_databse_v38 -l A -1 $file1_trimmed -2 $file2_trimmed -o $salmon_output --validateMappings -p 4 --numBootstraps 100 --seqBias --gcBias
 #picards
 samtools sort $this_bam -o $out_folder_trim/$sample_id.sorted.bam -@ 7
 mkdir -p $picard_out_folder/$sample_id
