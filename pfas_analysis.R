@@ -212,4 +212,4 @@ res_trans <- results(diff_trans)
 
 save(res_cord_pfas1, res_cord_pfas2, res_cord_pfas3, res_cord_pfas4, res_cord_pfas5, res_cord_pfas6, res_cord_pfas7, res_mat_pfas1, res_mat_pfas2, res_mat_pfas3, res_mat_pfas4, res_mat_pfas5, res_mat_pfas6, res_mat_pfas7, 
      res_r_pfas1, res_r_pfas2, res_r_pfas3, res_r_pfas4, res_r_pfas5, res_r_pfas6, res_r_pfas7, res_trans,
-     file = "/rsrch5/home/epi/bhattacharya_lab/users/whwu1/out/pfas_results_720.RData")
+     file = "/rsrch5/home/epi/bhattacharya_lab/users/whwu1/out/pfas_results_isoform.RData")
