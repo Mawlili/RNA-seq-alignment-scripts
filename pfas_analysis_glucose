@@ -1,0 +1,32 @@
+library(DESeq2)
+library(MASS)
+library(dplyr)
+library(readxl)
+
+load("/rsrch5/home/epi/bhattacharya_lab/users/whwu1/out/salmon_data_concise.RData")
+#filter out NA 
+pfas_w1 <- read_xlsx("/rsrch5/home/epi/bhattacharya_lab/users/whwu1/out/pfas_w1_adjusted.xlsx")
+pfas_w1_cord <- pfas_w1[!is.na(pfas_w1$cord_PFBA), ]
+pfas_w1_mat <- pfas_w1[!is.na(pfas_w1$mat_PFBA), ]
+pfas_w1_both <- pfas_w1_mat[!is.na(pfas_w1_mat$cord_PFBA), ]
+#filter for common sample id
+pfas_w1_cord_J <- paste0("J", pfas_w1_cord$condition.ID)
+pfas_w1_mat_J <- paste0("J", pfas_w1_mat$condition.ID)
+pfas_w1_both_J <- paste0("J", pfas_w1_both$condition.ID)
+
+counts_filtered_cord <- counts[, colnames(counts) %in% pfas_w1_cord_J ]
+counts_filtered_mat <- counts[, colnames(counts) %in% pfas_w1_mat_J ]
+counts_filtered_both <- counts[, colnames(counts) %in% pfas_w1_both_J ]
+
+#construct deseqdataset and perform deseq analysis
+
+#PFBA
+c_pfas_diff1 <- DESeqDataSetFromMatrix(countData = counts, colData = pfas_w1, design = ~ W_1 + condition.mother_ethnicity + condition.GROUP + condition.GA + condition.sex + condition.gdm_who_1999)
+c_pfas_diff1 <- estimateSizeFactors(c_pfas_diff1)
+idxc1 <- rowSums(counts(c_pfas_diff1, normalized=TRUE) >= 5 ) >= 3
+c_pfas_diff1 <- c_pfas_diff1[idxc1,]
+dds_c_pfas1 <- DESeq(c_pfas_diff1)
+res_glucose <- results(dds_c_pfas1)
+
+save(res_glucose,
+     file = "/rsrch5/home/epi/bhattacharya_lab/users/whwu1/out/glucose_diffeq.RData")
