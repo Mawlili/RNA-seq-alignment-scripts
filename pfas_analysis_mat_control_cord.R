@@ -85,4 +85,4 @@ diff_trans <- DESeq(transcript)
 res_trans <- results(diff_trans)
 
 save(res_c_pfas2, res_c_pfas3, res_c_pfas4, res_c_pfas5, res_c_pfas6, res_c_pfas7, res_c_pfas1, res_trans,
-     file = "/rsrch5/home/epi/bhattacharya_lab/users/whwu1/out/pfas_results_taking_mat_control.RData")
+     file = "/rsrch5/home/epi/bhattacharya_lab/users/whwu1/out/pfas_results_taking_mat_control_no_shrink.RData")
