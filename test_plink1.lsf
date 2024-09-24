@@ -1,0 +1,37 @@
+﻿#BSUB -J test_plinkcode1 
+#BSUB -W 24:00
+#BSUB -o /rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/genotypes
+#BSUB -e /rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/genotypes
+#BSUB -q medium 
+#BSUB -n 1
+#BSUB -M 20
+#BSUB -R rusage[mem=20]
+#BSUB -N
+#BSUB -B
+#BSUB -u whwu1@mdanderson.org
+
+### LOAD UP MODULES
+module add R/4.3.1
+module add samtools/1.15
+module add perl/5.28.1
+module add blast/2.8.1
+module add plink
+
+### DEFINE GLOBAL VARIABLES
+base_espresso=/rsrch5/home/epi/bhattacharya_lab/software/longreadapps/espresso/src
+espresso_script=/rsrch5/home/epi/bhattacharya_lab/projects/placenta_mapqtl/LR_RNAseq/ESPRESSO
+base_ref=/rsrch5/home/epi/bhattacharya_lab/projects/placenta_mapqtl/reference
+genetics_directory=/rsrch5/home/epi/bhattacharya_lab/data/mapqtl/GUSTO/genotypes
+
+### RUN LINES OF CODE
+
+cd $genetics_directory
+
+plink2 --bfile s194_noQC --maf 0.01 --hwe 1e-6 --geno 0.2 ‐‐check-sex --make-bed --out s194_noQC_v1
+
+plink2 --bfile s194_noQC_v1 --make-rel 
+
+plink2 --bfile s194_noQC_v1 --pca --out s194_noQC_pca
+
+
+### CLEANUP
