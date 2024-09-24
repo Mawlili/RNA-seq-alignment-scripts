@@ -1,0 +1,135 @@
+---
+title: "remove_batch_pfas"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(FactoMineR)
+library(factoextra)
+library(tidyr)
+library(writexl)
+library(readxl)
+```
+
+You can add options to executable code like this
+
+```{r}
+anova_res <- aov(mat_PFBA ~ as.factor(mat_Plate), data = pfas_w1_both)
+summary(anova_res)
+
+ggplot(pfas_w1_both, aes(x = as.factor(mat_Plate), y = mat_PFBA)) +
+  geom_point(position = position_jitter(width = 0.1), alpha = 0.5) +
+  stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.1, color = "blue") +
+  stat_summary(fun = mean, geom = "point", color = "red", size = 3) +
+  labs(x = "Plate", y = "PFBA Concentration") +
+  theme_minimal()
+
+anova_res <- aov(cord_PFBA ~ as.factor(cord_Plate), data = pfas_w1_both)
+summary(anova_res)
+
+ggplot(pfas_w1_both, aes(x = as.factor(cord_Plate), y = cord_PFBA)) +
+  geom_point(position = position_jitter(width = 0.1), alpha = 0.5) +
+  stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.2, color = "blue") +
+  stat_summary(fun = mean, geom = "point", color = "red", size = 3) +
+  labs(x = "Plate", y = "PFBA Concentration") +
+  theme_minimal()
+#p < 0.05
+```
+
+```{r}
+#separate cord and mat
+cord_columns <- c("condition.SubjectID", "cord_PFBA", "cord_PFOA", "cord_PFNA", "cord_PFDA", "cord_PFUnDA", "cord_PFBS", "cord_PFHxS", "cord_PFOS", "cord_Plate")
+mat_columns <- c("condition.SubjectID", "mat_PFBA", "mat_PFOA", "mat_PFNA", "mat_PFDA", "mat_PFUnDA", "mat_PFBS", "mat_PFHxS", "mat_PFOS", "mat_Plate")
+selected_cord <- pfas_w1_both %>% select(all_of(cord_columns))
+selected_mat <-pfas_w1_both %>% select(all_of(mat_columns))
+```
+
+```{r}
+#format and removebatcheffect
+selected_cord <- selected_cord %>%
+  mutate(condition.SubjectID = gsub("-", "", condition.SubjectID))
+selected_cord%>%
+  mutate(across(everything(), as.numeric))
+t_selected_cord <- t(selected_cord)
+colnames(t_selected_cord) <- t_selected_cord[1, ]
+
+t_selected_cord <- t_selected_cord[-1,]
+t_selected_cord <- as.data.frame(t_selected_cord)
+t_selected_cord <- t_selected_cord %>%
+  mutate(across(everything(), as.numeric))
+
+adjusted_data <- removeBatchEffect(t_selected_cord, batch = selected_cord$cord_Plate)
+
+t_adjusted_data <- as.data.frame(t(adjusted_data))
+
+#add back batch number for anova
+
+t_adjusted_data$condition.SubjectID <- rownames(t_adjusted_data)
+
+t_adjusted_data <- t_adjusted_data[ , -9]
+
+#t_adjusted_data$condition.SubjectID <- sub("^0+", "", t_adjusted_data$condition.SubjectID)
+
+adjusted_cord <- merge(t_adjusted_data, selected_cord[, c("condition.SubjectID", "cord_Plate")], by = "condition.SubjectID", all.x = TRUE)
+
+```
+
+```{r}
+selected_mat <- selected_mat %>%
+  mutate(condition.SubjectID = gsub("-", "", condition.SubjectID))
+selected_mat%>%
+  mutate(across(everything(), as.numeric))
+t_selected_mat <- t(selected_mat)
+colnames(t_selected_mat) <- t_selected_mat[1, ]
+
+t_selected_mat <- t_selected_mat[-1,]
+t_selected_mat <- as.data.frame(t_selected_mat)
+t_selected_mat <- t_selected_mat %>%
+  mutate(across(everything(), as.numeric))
+
+adjusted_data <- removeBatchEffect(t_selected_mat, batch = selected_mat$mat_Plate)
+
+t_adjusted_data <- as.data.frame(t(adjusted_data))
+
+#add back batch number for anova
+
+t_adjusted_data$condition.SubjectID <- rownames(t_adjusted_data)
+
+t_adjusted_data <- t_adjusted_data[ , -9]
+
+#t_adjusted_data$condition.SubjectID <- sub("^0+", "", t_adjusted_data$condition.SubjectID)
+
+adjusted_mat <- merge(t_adjusted_data, selected_mat[, c("condition.SubjectID", "mat_Plate")], by = "condition.SubjectID", all.x = TRUE)
+```
+
+```{r}
+anova_res <- aov(mat_PFBA ~ as.factor(mat_Plate), data = adjusted_mat)
+summary(anova_res)
+anova_res1 <- aov(cord_PFBA ~ as.factor(cord_Plate), data = adjusted_cord)
+summary(anova_res1)
+```
+
+```{r}
+adjusted_mat$condition.SubjectID <- sub("^(.{3})(.*)$", "\\1-\\2", adjusted_mat$condition.SubjectID)
+adjusted_cord$condition.SubjectID <- sub("^(.{3})(.*)$", "\\1-\\2", adjusted_cord$condition.SubjectID)
+```
+
+```{r}
+merged_df <- merge(adjusted_mat, pfas_w1_both, by = "condition.SubjectID", all.x = TRUE)
+pfas_w1_adjusted <- merge(adjusted_cord, merged_df, by = "condition.SubjectID", all.x = TRUE)
+names(pfas_w1_adjusted) <- gsub("\\.x$", "", names(pfas_w1_adjusted))
+names(pfas_w1_adjusted)
+pfas_w1_adjusted <- as.data.frame(pfas_w1_adjusted)
+write_xlsx(pfas_w1_adjusted, path = "pfas_w1_adjusted.xlsx")
+```
